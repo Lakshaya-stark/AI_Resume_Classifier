@@ -5,6 +5,8 @@ from utils.parser import extract_text
 from utils.nlp import extract_skills
 from utils.matcher import calculate_match_score
 from db.mongo import candidates_collection  
+from fastapi import Query
+from fastapi import Body
 
 app = FastAPI()
 
@@ -27,13 +29,14 @@ def upload_resume(
 
 
     candidate_data = {
-        "filename": file.filename,
-        "file_path": file_path,
-        "skills": skills,
-        "match_score": score,
-        "job_description": job_description,
-        "created_at": str(os.path.getctime(file_path))
-    }
+    "filename": file.filename,
+    "file_path": file_path,
+    "skills": skills,
+    "match_score": score,
+    "job_description": job_description,
+    "status": "pending",  
+    "created_at": str(os.path.getctime(file_path))
+}
 
     candidates_collection.insert_one(candidate_data)
 
@@ -44,6 +47,24 @@ def upload_resume(
     }
 
 @app.get("/candidates")
-def get_candidates():
-    candidates = list(candidates_collection.find({}, {"_id": 0}))
+def get_candidates(min_score: float = Query(0)):
+    candidates = list(
+        candidates_collection.find(
+            {"match_score": {"$gte": min_score}},  # 🔥 filter
+            {"_id": 0}
+        ).sort("match_score", -1)
+    )
     return candidates
+
+
+@app.put("/update-status")
+def update_status(filename: str = Body(...), status: str = Body(...)):
+    result = candidates_collection.update_one(
+        {"filename": filename},
+        {"$set": {"status": status}}
+    )
+
+    if result.modified_count == 0:
+        return {"message": "No document updated (check filename)"}
+
+    return {"message": "Status updated successfully"}

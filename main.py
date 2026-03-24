@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 import shutil
 import os
 from utils.parser import extract_text
+from utils.nlp import extract_skills   # 👈 NEW
 
 app = FastAPI()
 
@@ -16,10 +17,11 @@ def upload_resume(file: UploadFile = File(...)):
 
     extracted_text = extract_text(file_path)
 
+    # 🔥 NLP processing
+    skills = extract_skills(extracted_text)
+
     return {
         "filename": file.filename,
-        "message": "Resume uploaded successfully",
-        "preview": extracted_text[:500]  
+        "skills": skills,
+        "preview": extracted_text[:300]
     }
-
-

@@ -4,10 +4,22 @@ import os
 from utils.parser import extract_text
 from utils.nlp import extract_skills
 from utils.matcher import calculate_match_score
+from db.mongo import candidates_collection
+
+
 
 app = FastAPI()
 
 UPLOAD_DIR = "uploads"
+
+
+# Testing 
+@app.get("/test-db")
+def test_db():
+    candidates_collection.insert_one({"test": "working"})
+    return {"message": "MongoDB connected successfully"}
+
+
 
 @app.post("/upload-resume/")
 def upload_resume(
@@ -31,3 +43,4 @@ def upload_resume(
         "match_score": f"{score}%",
         "preview": extracted_text[:300]
     }
+

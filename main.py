@@ -62,8 +62,12 @@ def get_candidates(min_score: float = Query(0)):
     return candidates
 
 
+
 @app.put("/update-status")
-def update_status(filename: str = Body(...), status: str = Body(...)):
+def update_status(data: dict = Body(...)):
+    filename = data.get("filename")
+    status = data.get("status")
+
     result = candidates_collection.update_one(
         {"filename": filename},
         {"$set": {"status": status}}
@@ -73,7 +77,6 @@ def update_status(filename: str = Body(...), status: str = Body(...)):
         return {"message": "No document updated (check filename)"}
 
     return {"message": "Status updated successfully"}
-
 
 
 app.add_middleware(

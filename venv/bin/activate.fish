@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /media/stark21/Data/hddFiles/softwareProject/AI_Resume_Classifier/venv
+set -gx VIRTUAL_ENV /media/stark21/Data/hddFiles/softwareProject/AI_Resume_Classifier_backend/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

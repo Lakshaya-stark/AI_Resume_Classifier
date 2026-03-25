@@ -8,6 +8,11 @@ from db.mongo import candidates_collection
 from fastapi import Query
 from fastapi import Body
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
+
 app = FastAPI()
 
 UPLOAD_DIR = "uploads"
@@ -68,3 +73,13 @@ def update_status(filename: str = Body(...), status: str = Body(...)):
         return {"message": "No document updated (check filename)"}
 
     return {"message": "Status updated successfully"}
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

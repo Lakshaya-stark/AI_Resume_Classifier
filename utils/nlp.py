@@ -1,7 +1,19 @@
-import spacy
+def extract_skills(text):
+    skills_list = [
+        "python", "java", "javascript", "react", "angular",
+        "node", "mongodb", "sql", "docker", "aws"
+    ]
 
-nlp = spacy.load("en_core_web_sm")
+    text = text.lower()
+    found_skills = []
 
+    for skill in skills_list:
+        if skill in text:
+            found_skills.append(skill)
+
+    return list(set(found_skills))
+
+    
 SKILLS_DB = {
     "python": ["python"],
     "java": ["java"],

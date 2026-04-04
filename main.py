@@ -11,8 +11,6 @@ from fastapi import Body
 from fastapi.middleware.cors import CORSMiddleware
 
 
-
-
 app = FastAPI()
 
 UPLOAD_DIR = "uploads"
@@ -55,7 +53,7 @@ def upload_resume(
 def get_candidates(min_score: float = Query(0)):
     candidates = list(
         candidates_collection.find(
-            {"match_score": {"$gte": min_score}},  # 🔥 filter
+            {"match_score": {"$gte": min_score}},
             {"_id": 0}
         ).sort("match_score", -1)
     )
